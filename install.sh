@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Claude Code environment bootstrap.
 # Two ways to run:
-#   1. Locally from a clone:      ./install.sh
-#   2. One-liner, no clone:       curl -fsSL <RAW_URL>/install.sh | bash
-#      (set REPO_URL below and push this repo first)
+#   1. Locally from a clone:  bash install.sh
+#   2. One-liner, no clone:   curl -fsSL https://raw.githubusercontent.com/vitoUwu/claude-config/main/install.sh | bash
 set -euo pipefail
 
 # Override with CLAUDE_CONFIG_REPO if you fork this.
@@ -13,13 +12,16 @@ log()  { printf '\033[36m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[33m warn:\033[0m %s\n' "$*"; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
-# --- 0. Locate the payload (bootstrap-clone if piped via curl) ---------------
+# --- 0. Locate the payload; if piped via curl, clone then re-exec from a FILE -
+# Re-exec matters: under `curl | bash` the script lives on stdin, so any child
+# that reads stdin (e.g. `npx skills`) would swallow the rest of the script.
+# Running from a real cloned file frees stdin.
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 if [ ! -d "$SRC/claude" ]; then
   log "No local payload found — cloning $REPO_URL"
   TMP="$(mktemp -d)"
   git clone --depth 1 "$REPO_URL" "$TMP/claude-config"
-  SRC="$TMP/claude-config"
+  exec bash "$TMP/claude-config/install.sh"
 fi
 
 case "$(uname -s)" in
@@ -40,18 +42,28 @@ if [ "$OS" = windows ]; then
     warn "winget not found — install Node.js, jq and git manually"
   fi
 else
-  # Linux / macOS
+  # Linux / macOS — install ONLY what's missing. (Requesting 'npm' alongside a
+  # NodeSource 'nodejs' triggers apt's "npm conflicts with nodejs" breakage;
+  # NodeSource/nvm Node already bundles npm/npx, so we never ask for npm.)
   SUDO=""; [ "$(id -u)" -ne 0 ] && have sudo && SUDO=sudo
-  PKGS="nodejs npm jq git curl"
-  if   have apt-get; then log "apt-get install $PKGS"; $SUDO apt-get update -y && $SUDO apt-get install -y $PKGS || warn "apt install failed"
-  elif have dnf;     then log "dnf install $PKGS";     $SUDO dnf install -y $PKGS || warn "dnf install failed"
-  elif have pacman;  then log "pacman -S nodejs npm jq git curl"; $SUDO pacman -Sy --noconfirm nodejs npm jq git curl || warn "pacman install failed"
-  elif have zypper;  then log "zypper install $PKGS"; $SUDO zypper install -y $PKGS || warn "zypper install failed"
-  elif have brew;    then log "brew install node jq git"; brew install node jq git || warn "brew install failed"
-  else warn "No known package manager — install node, npm, jq, git, curl yourself"
+  NEED=""
+  have npx || have node || NEED="$NEED nodejs"
+  have jq   || NEED="$NEED jq"
+  have git  || NEED="$NEED git"
+  have curl || NEED="$NEED curl"
+  if [ -n "$NEED" ]; then
+    if   have apt-get; then log "apt-get install$NEED"; $SUDO apt-get update -y && $SUDO apt-get install -y $NEED || warn "apt install failed"
+    elif have dnf;     then log "dnf install$NEED";     $SUDO dnf install -y $NEED || warn "dnf install failed"
+    elif have pacman;  then log "pacman -S$NEED";       $SUDO pacman -Sy --noconfirm $NEED || warn "pacman install failed"
+    elif have zypper;  then log "zypper install$NEED";  $SUDO zypper install -y $NEED || warn "zypper install failed"
+    elif have brew;    then log "brew install${NEED/nodejs/node}"; brew install ${NEED/nodejs/node} || warn "brew install failed"
+    else warn "No known package manager — install node, jq, git, curl yourself"
+    fi
+  else
+    log "Node, jq, git, curl already present — skipping package install"
   fi
-  # Distro node can be old; 'npx skills@latest' wants a recent one. If it errors,
-  # install Node LTS via NodeSource (deb/rpm) or nvm and re-run.
+  # Plain distro 'nodejs' may omit npm; NodeSource/nvm bundle it.
+  have npx || warn "npx missing — install Node LTS (with npm) via NodeSource or nvm, then re-run"
 fi
 
 # Claude Code CLI
@@ -112,7 +124,7 @@ fi
 # Needs Node/npx (installed in step 1). Docs: https://github.com/vercel-labs/skills
 if have npx; then
   log "Installing cursor/plugins skills via npx skills"
-  npx skills@latest add cursor/plugins --global --yes \
+  npx -y skills@latest add cursor/plugins --global --yes \
     --skill blast-radius \
     --skill fix-ci \
     --skill thermo-nuclear-code-quality-review \
@@ -121,7 +133,7 @@ if have npx; then
   # mattpocock/skills. Note: design-an-interface & qa are in the repo's deprecated/
   # folder upstream — they install today but may be removed; re-vendor if that happens.
   log "Installing mattpocock/skills"
-  npx skills@latest add mattpocock/skills --global --yes \
+  npx -y skills@latest add mattpocock/skills --global --yes \
     --skill grill-me \
     --skill grill-with-docs \
     --skill handoff \
