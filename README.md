@@ -12,22 +12,23 @@ the prerequisite tooling.
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | global instructions (RTK usage + Karpathy guidelines) |
 | `claude/mcp.json` | `~/.claude/.mcp.json` | chrome-devtools MCP server (disabled by default) |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | fallback statusline script |
-| `claude/skills/` | `~/.claude/skills/` | 4 bespoke skills |
+| `claude/skills/` | `~/.claude/skills/` | 3 bespoke skills |
 
 **Skills (14 total):**
-- **4 bespoke** — vendored in `claude/skills/`: audit-website, diagnose, prd, review.
+- **3 bespoke** — vendored in `claude/skills/`: diagnose, prd, review.
 - **4 from `cursor/plugins`** — installed via the [skills CLI](https://github.com/vercel-labs/skills):
   blast-radius, fix-ci, thermo-nuclear-code-quality-review, thermo-nuclear-review.
 - **6 from `mattpocock/skills`** — installed via the skills CLI: grill-me, grill-with-docs, handoff,
   improve-codebase-architecture, design-an-interface, qa. (The last two are in mattpocock's
   `deprecated/` folder — installable today but may be removed upstream; re-vendor if that happens.)
+- **1 from `squirrelscan/skills`** — installed via the skills CLI: audit-website.
 
 Prerequisite tools the script installs: **Claude Code CLI, Node.js/npm, jq, git**, plus
 **cship** (statusline, via <https://cship.dev>) and **rtk** (Rust Token Killer, via
 <https://github.com/rtk-ai/rtk>) from their official installers.
 Plugin marketplaces it registers: `claude-plugins-official`, `understand-anything`
-(enables `frontend-design` + `understand-anything`). Skills from `cursor/plugins` and
-`mattpocock/skills` are pulled with `npx skills@latest add`.
+(enables `frontend-design` + `understand-anything`). Skills from `cursor/plugins`,
+`mattpocock/skills` and `squirrelscan/skills` are pulled with `npx skills@latest add`.
 
 ## Run it
 

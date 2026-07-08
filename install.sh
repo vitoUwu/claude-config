@@ -141,6 +141,11 @@ if have npx; then
     --skill improve-codebase-architecture \
     --skill design-an-interface \
     --skill qa </dev/null || warn "npx skills add (mattpocock) failed — install them manually"
+
+  # squirrelscan/skills
+  log "Installing squirrelscan/skills"
+  npx -y skills@latest add squirrelscan/skills --global --yes \
+    --skill audit-website </dev/null || warn "npx skills add (squirrelscan) failed — install it manually"
 else
   warn "npx not found — skipping cursor/plugins + mattpocock skills"
 fi
