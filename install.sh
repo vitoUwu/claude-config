@@ -103,8 +103,19 @@ if have npx; then
     --skill fix-ci \
     --skill thermo-nuclear-code-quality-review \
     --skill thermo-nuclear-review || warn "npx skills add failed — install them manually"
+
+  # mattpocock/skills. Note: design-an-interface & qa are in the repo's deprecated/
+  # folder upstream — they install today but may be removed; re-vendor if that happens.
+  log "Installing mattpocock/skills"
+  npx skills@latest add mattpocock/skills --global --yes \
+    --skill grill-me \
+    --skill grill-with-docs \
+    --skill handoff \
+    --skill improve-codebase-architecture \
+    --skill design-an-interface \
+    --skill qa || warn "npx skills add (mattpocock) failed — install them manually"
 else
-  warn "npx not found — skipping cursor/plugins skills (blast-radius, fix-ci, thermo-nuclear-*)"
+  warn "npx not found — skipping cursor/plugins + mattpocock skills"
 fi
 
 # --- 5. Plugin marketplaces + enabled plugins --------------------------------

@@ -2,3 +2,7 @@
 .credentials.json
 history.jsonl
 stats-cache.json
+
+# Artifacts dropped by the `npx skills` CLI if run inside this repo
+.agents/
+skills-lock.json
