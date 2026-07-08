@@ -12,13 +12,20 @@ the prerequisite tooling.
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | global instructions (RTK usage + Karpathy guidelines) |
 | `claude/mcp.json` | `~/.claude/.mcp.json` | chrome-devtools MCP server (disabled by default) |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | fallback statusline script |
-| `claude/skills/` | `~/.claude/skills/` | 14 custom skills |
+| `claude/skills/` | `~/.claude/skills/` | 10 bespoke skills |
+
+**Skills (14 total):**
+- **10 bespoke** — vendored in `claude/skills/`: audit-website, design-an-interface, diagnose,
+  grill-me, grill-with-docs, handoff, improve-codebase-architecture, prd, qa, review.
+- **4 from `cursor/plugins`** — installed by the script via the [skills CLI](https://github.com/vercel-labs/skills):
+  blast-radius, fix-ci, thermo-nuclear-code-quality-review, thermo-nuclear-review.
 
 Prerequisite tools the script installs: **Claude Code CLI, Node.js, PowerShell 7, jq, BurntToast**,
 plus **cship** (statusline, via <https://cship.dev>) and **rtk** (Rust Token Killer, via
 <https://github.com/rtk-ai/rtk>) from their official installers.
 Plugin marketplaces it registers: `claude-plugins-official`, `understand-anything`
-(enables `frontend-design` + `understand-anything`).
+(enables `frontend-design` + `understand-anything`). Skills from `cursor/plugins` are pulled
+with `npx skills@latest add`.
 
 ## Run it
 

@@ -92,9 +92,22 @@ cp "$SRC/claude/CLAUDE.md"             "$HOME/.claude/CLAUDE.md"
 cp "$SRC/claude/mcp.json"              "$HOME/.claude/.mcp.json"     # restore dot-name
 cp "$SRC/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 cp -r "$SRC/claude/skills/."           "$HOME/.claude/skills/"
-log "Copied settings, CLAUDE.md, .mcp.json, statusline + $(ls "$SRC/claude/skills" | wc -l) skills into ~/.claude"
+log "Copied settings, CLAUDE.md, .mcp.json, statusline + $(ls "$SRC/claude/skills" | wc -l) bespoke skills into ~/.claude"
 
-# --- 4. Plugin marketplaces + enabled plugins --------------------------------
+# --- 4. Skills from cursor/plugins (installed via the skills CLI) ------------
+# Needs Node/npx (installed in step 1). Docs: https://github.com/vercel-labs/skills
+if have npx; then
+  log "Installing cursor/plugins skills via npx skills"
+  npx skills@latest add cursor/plugins --global --yes \
+    --skill blast-radius \
+    --skill fix-ci \
+    --skill thermo-nuclear-code-quality-review \
+    --skill thermo-nuclear-review || warn "npx skills add failed — install them manually"
+else
+  warn "npx not found — skipping cursor/plugins skills (blast-radius, fix-ci, thermo-nuclear-*)"
+fi
+
+# --- 5. Plugin marketplaces + enabled plugins --------------------------------
 if have claude; then
   log "Registering plugin marketplaces"
   claude plugin marketplace add anthropics/claude-plugins-official || true
