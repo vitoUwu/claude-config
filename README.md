@@ -33,16 +33,16 @@ Plugin marketplaces it registers: `claude-plugins-official`, `understand-anythin
 
 **From a clone:**
 ```bash
-git clone https://github.com/YOUR_USER/claude-config.git
+git clone https://github.com/vitoUwu/claude-config.git
 cd claude-config
 bash install.sh
 ```
 
-**One command, no clone** (edit `REPO_URL` in `install.sh` and push first, then):
+**One command, no clone:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/claude-config/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/vitoUwu/claude-config/main/install.sh | bash
 ```
-Run via curl, the script clones itself into a temp dir to fetch the payload (binaries + skills).
+Run via curl, the script clones itself into a temp dir to fetch the payload (config + vendored skills).
 
 After it finishes: **restart your shell** (PATH change), run `claude`, then `/login`.
 

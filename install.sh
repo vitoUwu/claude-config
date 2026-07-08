@@ -6,9 +6,8 @@
 #      (set REPO_URL below and push this repo first)
 set -euo pipefail
 
-# ---- fill this in after you push the repo to GitHub -------------------------
-REPO_URL="${CLAUDE_CONFIG_REPO:-https://github.com/YOUR_USER/claude-config.git}"
-# -----------------------------------------------------------------------------
+# Override with CLAUDE_CONFIG_REPO if you fork this.
+REPO_URL="${CLAUDE_CONFIG_REPO:-https://github.com/vitoUwu/claude-config.git}"
 
 log()  { printf '\033[36m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[33m warn:\033[0m %s\n' "$*"; }
