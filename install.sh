@@ -14,14 +14,15 @@ have() { command -v "$1" >/dev/null 2>&1; }
 
 # --- 0. Locate the payload; if piped via curl, clone then re-exec from a FILE -
 # Re-exec matters: under `curl | bash` the script lives on stdin, so any child
-# that reads stdin (e.g. `npx skills`) would swallow the rest of the script.
-# Running from a real cloned file frees stdin.
+# that reads stdin (e.g. `npx skills`) would swallow the rest of the script and
+# echo it. Re-exec from the cloned FILE with stdin detached (</dev/null) so the
+# script runs to completion AND no child can read the leftover pipe.
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 if [ ! -d "$SRC/claude" ]; then
   log "No local payload found — cloning $REPO_URL"
   TMP="$(mktemp -d)"
   git clone --depth 1 "$REPO_URL" "$TMP/claude-config"
-  exec bash "$TMP/claude-config/install.sh"
+  exec bash "$TMP/claude-config/install.sh" </dev/null
 fi
 
 case "$(uname -s)" in
@@ -128,7 +129,7 @@ if have npx; then
     --skill blast-radius \
     --skill fix-ci \
     --skill thermo-nuclear-code-quality-review \
-    --skill thermo-nuclear-review || warn "npx skills add failed — install them manually"
+    --skill thermo-nuclear-review </dev/null || warn "npx skills add failed — install them manually"
 
   # mattpocock/skills. Note: design-an-interface & qa are in the repo's deprecated/
   # folder upstream — they install today but may be removed; re-vendor if that happens.
@@ -139,7 +140,7 @@ if have npx; then
     --skill handoff \
     --skill improve-codebase-architecture \
     --skill design-an-interface \
-    --skill qa || warn "npx skills add (mattpocock) failed — install them manually"
+    --skill qa </dev/null || warn "npx skills add (mattpocock) failed — install them manually"
 else
   warn "npx not found — skipping cursor/plugins + mattpocock skills"
 fi
