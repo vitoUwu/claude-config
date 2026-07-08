@@ -29,22 +29,29 @@ case "$(uname -s)" in
 esac
 log "Detected OS: $OS"
 
-# --- 1. Prerequisite tools ---------------------------------------------------
+# --- 1. Prerequisite tools (Node, npm, jq, git, curl) ------------------------
 if [ "$OS" = windows ]; then
   if have winget; then
-    for pkg in OpenJS.NodeJS Microsoft.PowerShell jqlang.jq; do
+    for pkg in OpenJS.NodeJS jqlang.jq Git.Git; do
       log "winget install $pkg"
       winget install --accept-source-agreements --accept-package-agreements -e --id "$pkg" || warn "$pkg may already be installed"
     done
   else
-    warn "winget not found — install Node.js, PowerShell 7 and jq manually"
-  fi
-  if have pwsh; then
-    log "Installing BurntToast PowerShell module (for notification hooks)"
-    pwsh -NoProfile -Command "if (-not (Get-Module -ListAvailable BurntToast)) { Install-Module BurntToast -Scope CurrentUser -Force }" || warn "BurntToast install failed"
+    warn "winget not found — install Node.js, jq and git manually"
   fi
 else
-  warn "Non-Windows target: the Notification/Stop/SessionEnd hooks use pwsh + BurntToast and will not fire. Install node & jq via your package manager."
+  # Linux / macOS
+  SUDO=""; [ "$(id -u)" -ne 0 ] && have sudo && SUDO=sudo
+  PKGS="nodejs npm jq git curl"
+  if   have apt-get; then log "apt-get install $PKGS"; $SUDO apt-get update -y && $SUDO apt-get install -y $PKGS || warn "apt install failed"
+  elif have dnf;     then log "dnf install $PKGS";     $SUDO dnf install -y $PKGS || warn "dnf install failed"
+  elif have pacman;  then log "pacman -S nodejs npm jq git curl"; $SUDO pacman -Sy --noconfirm nodejs npm jq git curl || warn "pacman install failed"
+  elif have zypper;  then log "zypper install $PKGS"; $SUDO zypper install -y $PKGS || warn "zypper install failed"
+  elif have brew;    then log "brew install node jq git"; brew install node jq git || warn "brew install failed"
+  else warn "No known package manager — install node, npm, jq, git, curl yourself"
+  fi
+  # Distro node can be old; 'npx skills@latest' wants a recent one. If it errors,
+  # install Node LTS via NodeSource (deb/rpm) or nvm and re-run.
 fi
 
 # Claude Code CLI
@@ -92,6 +99,14 @@ cp "$SRC/claude/mcp.json"              "$HOME/.claude/.mcp.json"     # restore d
 cp "$SRC/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 cp -r "$SRC/claude/skills/."           "$HOME/.claude/skills/"
 log "Copied settings, CLAUDE.md, .mcp.json, statusline + $(ls "$SRC/claude/skills" | wc -l) bespoke skills into ~/.claude"
+
+# The Notification/Stop/SessionEnd hooks call pwsh + BurntToast (Windows toasts).
+# On Linux/macOS strip them so nothing errors on every turn.
+if [ "$OS" != windows ] && have jq; then
+  tmp="$(mktemp)"
+  jq 'del(.hooks)' "$HOME/.claude/settings.json" > "$tmp" && mv "$tmp" "$HOME/.claude/settings.json"
+  log "Stripped Windows-only notification hooks from settings.json"
+fi
 
 # --- 4. Skills from cursor/plugins (installed via the skills CLI) ------------
 # Needs Node/npx (installed in step 1). Docs: https://github.com/vercel-labs/skills
