@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "chrome-devtools-mcp": {
+      "command": "node",
+      "args": ["C:/Users/vitoo/.claude/plugins/cache/claude-plugins-official/chrome-devtools-mcp/1.1.1/build/src/bin/chrome-devtools-mcp.js"],
+      "type": "stdio"
+    }
+  }
+}

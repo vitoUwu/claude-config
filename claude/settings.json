@@ -1,0 +1,107 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm init:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm format:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm install:*)",
+      "Bash(bun install:*)",
+      "Bash(bun add:*)",
+      "Bash(bun run:*)",
+      "Bash(bunx tsc:*)",
+      "Bash(bunx:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "Bash(bun --filter @finance/database db:generate)",
+      "Bash(xargs grep:*)",
+      "Bash(chrome-devtools navigate_page --url \"http://localhost:8000/patagonia-nano-puff-jacket-womens-10613405/p\" --timeout 10000)",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('mcpServers', {}\\), indent=2\\)\\)\")",
+      "Bash(rtk read *)",
+      "Bash(rtk deno *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoLogo -NoProfile -Command \"$input = $input | Out-String; if ($input.Trim()) { $json = ConvertFrom-Json $input; Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', $json.message -AppLogo '~/.claude/claude.png' -Sound Alarm2 }\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoLogo -NoProfile -Command \"Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', 'Processing completed' -AppLogo '~/.claude/claude.png' -Sound Default\""
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoLogo -NoProfile -Command \"Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', 'Session ended' -AppLogo '~/.claude/claude.png' -Sound Default\""
+          }
+        ]
+      }
+    ]
+  },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "cship"
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": true,
+    "claude-mem@thedotmack": false,
+    "caveman@caveman": false,
+    "chrome-devtools-mcp@claude-plugins-official": false,
+    "understand-anything@understand-anything": true
+  },
+  "extraKnownMarketplaces": {
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "understand-anything": {
+      "source": {
+        "source": "github",
+        "repo": "Egonex-AI/Understand-Anything"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "autoCompactWindow": 200000,
+  "autoUpdatesChannel": "latest",
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "preferredNotifChannel": "terminal_bell",
+  "autoCompactEnabled": true
+}

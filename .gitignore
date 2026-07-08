@@ -1,0 +1,4 @@
+# Never commit credentials/history if you ever copy them in:
+.credentials.json
+history.jsonl
+stats-cache.json
