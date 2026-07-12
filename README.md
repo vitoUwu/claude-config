@@ -8,7 +8,7 @@ the prerequisite tooling.
 
 | Path | Goes to | Purpose |
 |------|---------|---------|
-| `claude/settings.json` | `~/.claude/settings.json` | model (`opus[1m]`), `effortLevel: high`, `auto` permission mode, notification hooks, enabled plugins |
+| `claude/settings.json` | `~/.claude/settings.json` | model (`opus[1m]`), `effortLevel: high`, `auto` permission mode, enabled plugins |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | global instructions (RTK usage + Karpathy guidelines) |
 | `claude/mcp.json` | `~/.claude/.mcp.json` | chrome-devtools MCP server (disabled by default) |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | fallback statusline script |
@@ -48,11 +48,7 @@ Run via curl, the script clones itself into a temp dir to fetch the payload (con
 After it finishes: **restart your shell** (PATH change), run `claude`, then `/login`.
 
 ## Notes / caveats
-- **Linux/macOS:** installs Node/jq/git via the system package manager (apt/dnf/pacman/zypper/brew),
-  and **strips the `pwsh` + BurntToast notification hooks** from `settings.json` (they're Windows
-  desktop toasts and would error otherwise). Everything else installs normally.
-- **Windows:** the hooks stay; PowerShell 7 + BurntToast are *not* auto-installed — install them
-  yourself if you want the toast notifications, or the hooks just no-op.
+- **Linux/macOS:** installs Node/jq/git via the system package manager (apt/dnf/pacman/zypper/brew).
 - If `npx skills@latest` errors, your distro's Node is too old — install Node LTS via NodeSource or
   nvm and re-run.
 - `claude-mem` and `caveman` marketplaces are omitted (installed-but-disabled on the source machine);

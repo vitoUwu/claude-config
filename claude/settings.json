@@ -27,30 +27,6 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "pwsh -NoLogo -NoProfile -Command \"Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', 'Processing completed' -AppLogo '~/.claude/claude.png' -Sound Default\""
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "pwsh -NoLogo -NoProfile -Command \"Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', 'Session ended' -AppLogo '~/.claude/claude.png' -Sound Default\""
-          }
-        ]
-      }
-    ]
-  },
   "worktree": {
     "baseRef": "fresh"
   },

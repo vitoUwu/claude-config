@@ -113,14 +113,6 @@ cp "$SRC/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 cp -r "$SRC/claude/skills/."           "$HOME/.claude/skills/"
 log "Copied settings, CLAUDE.md, .mcp.json, statusline + $(ls "$SRC/claude/skills" | wc -l) bespoke skills into ~/.claude"
 
-# The Notification/Stop/SessionEnd hooks call pwsh + BurntToast (Windows toasts).
-# On Linux/macOS strip them so nothing errors on every turn.
-if [ "$OS" != windows ] && have jq; then
-  tmp="$(mktemp)"
-  jq 'del(.hooks)' "$HOME/.claude/settings.json" > "$tmp" && mv "$tmp" "$HOME/.claude/settings.json"
-  log "Stripped Windows-only notification hooks from settings.json"
-fi
-
 # --- 4. Skills from cursor/plugins (installed via the skills CLI) ------------
 # Needs Node/npx (installed in step 1). Docs: https://github.com/vercel-labs/skills
 if have npx; then
