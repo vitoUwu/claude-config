@@ -28,17 +28,6 @@
   },
   "model": "opus[1m]",
   "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "pwsh -NoLogo -NoProfile -Command \"$input = $input | Out-String; if ($input.Trim()) { $json = ConvertFrom-Json $input; Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', $json.message -AppLogo '~/.claude/claude.png' -Sound Alarm2 }\""
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "matcher": "",
