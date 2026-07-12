@@ -14,7 +14,7 @@ the prerequisite tooling.
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | fallback statusline script |
 | `claude/skills/` | `~/.claude/skills/` | 3 bespoke skills |
 
-**Skills (14 total):**
+**Skills (15 total):**
 - **3 bespoke** — vendored in `claude/skills/`: diagnose, prd, review.
 - **4 from `cursor/plugins`** — installed via the [skills CLI](https://github.com/vercel-labs/skills):
   blast-radius, fix-ci, thermo-nuclear-code-quality-review, thermo-nuclear-review.
@@ -22,6 +22,7 @@ the prerequisite tooling.
   improve-codebase-architecture, design-an-interface, qa. (The last two are in mattpocock's
   `deprecated/` folder — installable today but may be removed upstream; re-vendor if that happens.)
 - **1 from `squirrelscan/skills`** — installed via the skills CLI: audit-website.
+- **1 from `jakubkrehel/make-interfaces-feel-better`** — installed via the skills CLI: make-interfaces-feel-better.
 
 Prerequisite tools the script installs: **Claude Code CLI, Node.js/npm, jq, git**, plus
 **cship** (statusline, via <https://cship.dev>) and **rtk** (Rust Token Killer, via

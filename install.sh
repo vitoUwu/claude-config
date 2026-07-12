@@ -138,6 +138,10 @@ if have npx; then
   log "Installing squirrelscan/skills"
   npx -y skills@latest add squirrelscan/skills --global --yes \
     --skill audit-website </dev/null || warn "npx skills add (squirrelscan) failed — install it manually"
+
+  # jakubkrehel/make-interfaces-feel-better
+  log "Installing jakubkrehel/make-interfaces-feel-better"
+  npx -y skills@latest add jakubkrehel/make-interfaces-feel-better --global --yes </dev/null || warn "npx skills add (make-interfaces-feel-better) failed — install it manually"
 else
   warn "npx not found — skipping cursor/plugins + mattpocock skills"
 fi
