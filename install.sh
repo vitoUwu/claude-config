@@ -110,7 +110,13 @@ cp "$SRC/claude/settings.json"         "$HOME/.claude/settings.json"
 cp "$SRC/claude/CLAUDE.md"             "$HOME/.claude/CLAUDE.md"
 cp "$SRC/claude/mcp.json"              "$HOME/.claude/.mcp.json"     # restore dot-name
 cp "$SRC/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
-cp -r "$SRC/claude/skills/."           "$HOME/.claude/skills/"
+mkdir -p "$HOME/.claude/skills"
+for skill in "$SRC"/claude/skills/*/; do
+  dest="$HOME/.claude/skills/$(basename "$skill")"
+  # Don't clobber a symlinked skill the user points elsewhere (e.g. ~/.agents/skills).
+  if [ -L "$dest" ]; then warn "skipping symlinked skill: $(basename "$skill")"; continue; fi
+  rm -rf "$dest" && cp -r "$skill" "$dest"
+done
 log "Copied settings, CLAUDE.md, .mcp.json, statusline + $(ls "$SRC/claude/skills" | wc -l) bespoke skills into ~/.claude"
 
 # --- 4. Skills from cursor/plugins (installed via the skills CLI) ------------
@@ -141,7 +147,33 @@ if have npx; then
 
   # jakubkrehel/make-interfaces-feel-better
   log "Installing jakubkrehel/make-interfaces-feel-better"
-  npx -y skills@latest add jakubkrehel/make-interfaces-feel-better --global --yes </dev/null || warn "npx skills add (make-interfaces-feel-better) failed — install it manually"
+  npx -y skills@latest add https://github.com/jakubkrehel/make-interfaces-feel-better --global --yes \
+    --skill make-interfaces-feel-better </dev/null || warn "npx skills add (make-interfaces-feel-better) failed — install it manually"
+
+  # emilkowalski/skill
+  log "Installing emilkowalski/skill (emil-design-eng)"
+  npx -y skills@latest add https://github.com/emilkowalski/skill --global --yes \
+    --skill emil-design-eng </dev/null || warn "npx skills add (emil-design-eng) failed — install it manually"
+
+  # raphaelsalaja/skill
+  log "Installing raphaelsalaja/skill (12-principles-of-animation)"
+  npx -y skills@latest add https://github.com/raphaelsalaja/skill --global --yes \
+    --skill 12-principles-of-animation </dev/null || warn "npx skills add (12-principles-of-animation) failed — install it manually"
+
+  # ibelick/ui-skills
+  log "Installing ibelick/ui-skills (fixing-accessibility)"
+  npx -y skills@latest add https://github.com/ibelick/ui-skills --global --yes \
+    --skill fixing-accessibility </dev/null || warn "npx skills add (fixing-accessibility) failed — install it manually"
+
+  # vercel-labs/agent-skills
+  log "Installing vercel-labs/agent-skills (vercel-react-best-practices)"
+  npx -y skills@latest add https://github.com/vercel-labs/agent-skills --global --yes \
+    --skill vercel-react-best-practices </dev/null || warn "npx skills add (vercel-react-best-practices) failed — install it manually"
+
+  # millionco/react-doctor
+  log "Installing millionco/react-doctor (react-doctor)"
+  npx -y skills@latest add https://github.com/millionco/react-doctor --global --yes \
+    --skill react-doctor </dev/null || warn "npx skills add (react-doctor) failed — install it manually"
 else
   warn "npx not found — skipping cursor/plugins + mattpocock skills"
 fi
