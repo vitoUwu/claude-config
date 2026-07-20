@@ -12,6 +12,7 @@ the prerequisite tooling.
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | global instructions (RTK usage + Karpathy guidelines) |
 | `claude/mcp.json` | `~/.claude/.mcp.json` | chrome-devtools MCP server (disabled by default) |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | fallback statusline script |
+| `config/cship.toml` | `~/.config/cship.toml` | cship statusline layout (model, context %, peak, usage limits, colored diff) |
 | `claude/skills/` | `~/.claude/skills/` | 3 bespoke skills |
 
 **Skills (15 total):**

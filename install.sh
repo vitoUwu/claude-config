@@ -104,6 +104,11 @@ fi
 # Optional: 'rtk init -g' wires rtk's Bash-rewrite hook. Skipped — this repo's CLAUDE.md
 # already documents manual 'rtk' prefixing. Run it yourself if you want the auto-hook.
 
+# cship reads its config from ~/.config/cship.toml (not ~/.claude).
+mkdir -p "$HOME/.config"
+cp "$SRC/config/cship.toml" "$HOME/.config/cship.toml"
+log "Copied cship.toml into ~/.config"
+
 # --- 3. Config files into ~/.claude ------------------------------------------
 mkdir -p "$HOME/.claude"
 cp "$SRC/claude/settings.json"         "$HOME/.claude/settings.json"
